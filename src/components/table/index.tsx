@@ -25,7 +25,7 @@ class Table extends React.Component<IState, IState> {
     }
 
     public onClickTest() {
-        actions.addFork(new Fork(5, ForkStatus.FREE));
+        // actions.addFork(new Fork(5, ForkStatus.FREE));
         console.log(this.props);
     }
 
@@ -34,13 +34,13 @@ class Table extends React.Component<IState, IState> {
             <>
                 <p onClick={ this.onClickTest }>AddFork</p>
                 <div className="table">
-                    {this.props.philosophers.map((el, index) =>
+                    {this.state.philosophers.map((el, index) =>
                         <div key={index} className={"philosopher p" +
                             (index + 1) +
                             (el.getStatus() === PhilosopherStatus.EATING ?
                                 " eating" : " thinking")} />
                     )}
-                    {this.props.forks.map((el, index) =>
+                    {this.state.forks.map((el, index) =>
                         <div key={index} className={"fork f" +
                             (index + 1) +
                             (el.getStatus() === ForkStatus.FREE ?
