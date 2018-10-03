@@ -1,3 +1,6 @@
+export * from './Fork';
+export * from './Philosopher';
+
 export enum PhilosopherStatus {
     EATING, THINKING
 }

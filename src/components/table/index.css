@@ -1,0 +1,143 @@
+.table {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background-image: url('https://img.freepik.com/free-photo/wooden-texture_1208-334.jpg?size=338&ext=jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 100%;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.philosopher {
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    margin: auto;
+    border-radius: 100%;
+}
+
+.philosopher::after {
+    content: " ";
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 3;
+    width: 60px;
+    height: 60px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/White_Smile_Lirion.png/600px-White_Smile_Lirion.png');
+    background-size: cover;
+}
+
+.p1 {
+    top: 20px;
+    left: 0;
+    right: 0;
+}
+
+.p2 {
+    top: 150px;
+    right: 45px;
+    transform: rotate(72deg);
+}
+
+.p3 {
+    top: 425px;
+    right: 75px;
+    transform: rotate(144deg);
+}
+
+.p4 {
+    top: 425px;
+    left: 75px;
+    transform: rotate(-144deg);
+}
+
+.p5 {
+    top: 150px;
+    left: 45px;
+    transform: rotate(-72deg);
+}
+
+.eating {
+    background: -webkit-linear-gradient(50deg, #45cafc, #303f9f) !important;
+    background: -o-linear-gradient(50deg, #45cafc, #303f9f) !important;
+    background: linear-gradient(40deg, #45cafc, #303f9f) !important;
+}
+
+.thinking {
+    background: -webkit-linear-gradient(50deg, #ff6ec4, #7873f5) !important;
+    background: -o-linear-gradient(50deg, #ff6ec4, #7873f5) !important;
+    background: linear-gradient(40deg, #ff6ec4, #7873f5) !important;
+}
+
+.fork {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    margin: auto;
+    border-radius: 100%;
+}
+
+.fork::after {
+    content: " ";
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 3;
+    width: 80px;
+    height: 80px;
+    background-image: url('http://res.freestockphotos.biz/pictures/16/16875-illustration-of-a-dinner-fork-pv.png');
+    background-size: cover;
+}
+
+.f1 {
+    top: 65px;
+    right: 125px;
+    transform: rotate(-90deg);
+}
+
+.f2 {
+    top: 300px;
+    right: 45px;
+    transform: rotate(-45deg);
+}
+
+.f3 {
+    top: 425px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    transform: rotate(45deg);
+}
+
+.f4 {
+    top: 300px;
+    left: 45px;
+    transform: rotate(-270deg);
+}
+
+.f5 {
+    top: 75px;
+    left: 125px;
+    transform: rotate(-180deg);
+}
+
+.in-use {
+    background: #a0a0a0;
+}
+
+.free {
+    background: #ffffff;
+}
