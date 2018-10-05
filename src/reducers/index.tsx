@@ -3,8 +3,8 @@ import { combineReducers } from 'redux';
 import * as models from './../models';
 
 export interface ITableState {
-    readonly philosophers: models.IPhilosopher[];
-    readonly forks: models.IFork[];
+    philosophers: models.IPhilosopher[];
+    forks: models.IFork[];
 };
 
 export interface ITableAction {
@@ -12,7 +12,7 @@ export interface ITableAction {
     payload: any;
 }
 
-export default combineReducers<ITableState, ITableAction>({    
+export const rootReducer =  combineReducers<ITableState, ITableAction>({    
     forks: (state = [], action) => {
         switch (action.type) {
             case 'ADD_FORK':
@@ -32,17 +32,11 @@ export default combineReducers<ITableState, ITableAction>({
     philosophers: (state = [], action) => {
         switch (action.type) {
             case 'ADD_PHILOSOPHER':
-                return [
-                    ...state,
-                    action.payload
-                ];
+                return {...state, philosophers:action.payload};
             case 'UPDATE_PHILOSOPHER':
-                return [
-                    ...state,
-                    action.payload
-                ];
+                return {...state, philosophers:action.payload};
             default:
-                return [];
+                return state;
         }
     }
 });
