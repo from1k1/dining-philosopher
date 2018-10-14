@@ -14,6 +14,7 @@ export interface ITableAction {
 
 export const rootReducer =  combineReducers<ITableState, ITableAction>({    
     forks: (state = [], action) => {
+        console.log(action);
         switch (action.type) {
             case 'ADD_FORK':
                 return [
