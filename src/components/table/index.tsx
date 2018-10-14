@@ -29,10 +29,14 @@ export interface IProps<F extends IFork,
 class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extends React.Component<IProps<F, P, I>, IState> {
     public constructor(props: IProps<F, P, I>) {
         super(props);
-        for (let i = 0; i < 5; i++) {
-            this.props.onAddFork(new Fork(i + 1, ForkStatus.FREE));
-            this.props.onAddPhilosopher(new Philosopher("Philosopher " + (i + 1), PhilosopherStatus.THINKING));
-        }
+        const tmpFork: Fork[] = Array(5).fill(0).map((el, index) =>
+            new Fork(index + 1, ForkStatus.FREE)
+        );
+        const tmpPhilosopher: Philosopher[] = Array(5).fill(0).map((el, index) =>
+            new Philosopher("P " + index + 1, PhilosopherStatus.THINKING)
+        );
+        this.props.onAddFork(tmpFork);
+        this.props.onAddPhilosopher(tmpPhilosopher);
         this.state = {
             forks: this.props.forks,
             philosophers: this.props.philosophers,
@@ -43,7 +47,7 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
 
     public onClickTest() {
         // actions.addFork(new Fork(5, ForkStatus.FREE));
-        console.log(this.props);
+        // console.log(this.props);
         this.props.onAddFork(new Fork(5, ForkStatus.FREE));
     }
 
@@ -71,15 +75,20 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
         console.log(philosophers);
         console.log(forks);
         console.log(this.state);
-        switch (this.state.status) {
-            case AsyncStatus.LOADING: {
-                console.log("Loading");
-            };
-            case AsyncStatus.SUCCESS: {
-                console.log(this.props, this.state);
-            };
-            default: console.log("Error");
-        }
+        // switch (this.state.status) {
+        //     case AsyncStatus.LOADING: {
+        //         console.log("Loading");
+        //         break;
+        //     };
+        //     case AsyncStatus.SUCCESS: {
+        //         console.log(this.props, this.state);
+        //         break;
+        //     };
+        //     default: {
+        //         console.log("Error");
+        //         break;
+        //     }
+        // }
         return (
             <>
                 <p onClick={this.onClickTest}>AddFork</p>

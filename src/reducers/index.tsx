@@ -14,28 +14,27 @@ export interface ITableAction {
 
 export const rootReducer =  combineReducers<ITableState, ITableAction>({    
     forks: (state = [], action) => {
-        console.log(action);
         switch (action.type) {
             case 'ADD_FORK':
-                return [
+                return {
                     ...state,
-                    action.payload
-                ];
+                    forks: action.payload
+                };
             case 'UPDATE_FORK':
-                return [
+                return {
                     ...state,
-                    action.payload
-                ];
+                    forks: action.payload
+                };
             default:
-                return [];
+                return state;
         }
     },
     philosophers: (state = [], action) => {
         switch (action.type) {
             case 'ADD_PHILOSOPHER':
-                return {...state, philosophers:action.payload};
+                return {...state, philosophers: action.payload};
             case 'UPDATE_PHILOSOPHER':
-                return {...state, philosophers:action.payload};
+                return {...state, philosophers: action.payload};
             default:
                 return state;
         }
