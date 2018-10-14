@@ -26,19 +26,18 @@ export interface IProps<F extends IFork,
     status?: I;
 }
 
-class Table<F extends Fork,
-    P extends Philosopher,
-    I extends IAsync<any>>
-    extends React.Component<IProps<F, P, I>, IState> {
+class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extends React.Component<IProps<F, P, I>, IState> {
     public constructor(props: IProps<F, P, I>) {
         super(props);
         for (let i = 0; i < 5; i++) {
             this.props.onAddFork(new Fork(i + 1, ForkStatus.FREE));
             this.props.onAddPhilosopher(new Philosopher("Philosopher " + (i + 1), PhilosopherStatus.THINKING));
         }
-        this.setState({
+        this.state = {
+            forks: this.props.forks,
+            philosophers: this.props.philosophers,
             status: AsyncStatus.LOADING
-        });
+        };
         this.onClickTest = this.onClickTest.bind(this);
     }
 
@@ -53,6 +52,7 @@ class Table<F extends Fork,
             this.successUpdateStore(await fetchFunction());
         } catch (e) {
             this.errorUpdateStore();
+            console.log(e);
         }
     }
     public loadingUpdateStore = () => {
@@ -64,18 +64,19 @@ class Table<F extends Fork,
     }
 
     public errorUpdateStore = () => {
-        this.setState({ status: AsyncStatus.ERROR});
+        this.setState({ status: AsyncStatus.ERROR });
     }
     public render() {
         const { philosophers, forks } = this.props;
         console.log(philosophers);
         console.log(forks);
+        console.log(this.state);
         switch (this.state.status) {
             case AsyncStatus.LOADING: {
-                console.log("success");
+                console.log("Loading");
             };
             case AsyncStatus.SUCCESS: {
-                console.log("Suc");
+                console.log(this.props, this.state);
             };
             default: console.log("Error");
         }
@@ -83,20 +84,23 @@ class Table<F extends Fork,
             <>
                 <p onClick={this.onClickTest}>AddFork</p>
                 <div className="table">
-                    {this.props.philosophers.map((el, index) =>
-                        <div key={index} className={"philosopher p" +
-                            (index + 1) +
-                            (el.getStatus() === PhilosopherStatus.EATING ?
-                                " eating" : " thinking")} />
-                    )}
-                    {this.props.forks.map((el, index) =>
-                        <div key={index} className={"fork f" +
-                            (index + 1) +
-                            (
-                                el.getStatus() === ForkStatus.FREE
-                                    ? " free"
-                                    : " in-use")} />
-                    )}
+                    {(this.props.philosophers.length === 5) ?
+                        this.props.philosophers.map((el, index) =>
+                            <div key={index} className={"philosopher p" +
+                                (index + 1) +
+                                (el.getStatus() === PhilosopherStatus.EATING ?
+                                    " eating" : " thinking")} />
+                        ) : <>YOU SUCK BITCH!</>}
+
+                    {(this.props.forks.length === 5) ?
+                        this.props.forks.map((el, index) =>
+                            <div key={index} className={"fork f" +
+                                (index + 1) +
+                                (
+                                    el.getStatus() === ForkStatus.FREE
+                                        ? " free"
+                                        : " in-use")} />
+                        ) : <>YOU SUCK BITCH!</>}
                 </div>
             </>
         );
