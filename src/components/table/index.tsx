@@ -18,6 +18,7 @@ export interface IProps<F extends IFork,
     P extends IPhilosopher,
     I extends IAsync<any>> {
     forks: F[];
+    suka:string;
     philosophers: P[];
     onAddFork?: any;
     onAddPhilosopher?: any;
