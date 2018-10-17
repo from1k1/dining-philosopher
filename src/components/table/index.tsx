@@ -72,10 +72,9 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
         this.setState({ status: AsyncStatus.ERROR });
     }
     public render() {
-        const { philosophers, forks } = this.props;
-        console.log(philosophers);
-        console.log(forks);
-        console.log(this.state);
+        // const { philosophers, forks } = this.props;
+        console.log('State:');
+        console.log(this.props.philosophers);
         // switch (this.state.status) {
         //     case AsyncStatus.LOADING: {
         //         console.log("Loading");
