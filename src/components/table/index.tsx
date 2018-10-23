@@ -4,7 +4,6 @@ import * as actions from '../../actions';
 import { AsyncStatus, IAsync } from '../../helpers';
 import { Fork, ForkStatus, IFork, IPhilosopher, Philosopher, PhilosopherStatus } from '../../models';
 import './index.css';
-
 export interface IState {
     forks: Fork[];
     philosophers: Philosopher[];
@@ -47,6 +46,19 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     public async eat(index: number) {
+        while ((this.props.forks[index % 5].status !== ForkStatus.FREE)
+            && (this.props.forks[(index + 1) % 5].status !== ForkStatus.FREE)) {
+                console.log(this.props.forks[index % 5].status,this.props.forks[(index+1) % 5].status)
+        }
+
+        let tempFork = (this.props.forks[index % 5]);
+        tempFork.setStatus(ForkStatus.IN_USE);
+        this.props.onUpdateFork(tempFork);
+
+        tempFork = (this.props.forks[(index + 1) % 5]);
+        tempFork.setStatus(ForkStatus.IN_USE);
+        this.props.onUpdateFork(tempFork);
+
         const philosopher = this.props.philosophers[index];
         philosopher.setStatus(PhilosopherStatus.EATING);
         this.props.onUpdatePhilosopher(philosopher);
@@ -54,6 +66,15 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
         await this.think(index);
     }
     public async think(index: number) {
+
+        let tempFork = (this.props.forks[index % 5]);
+        tempFork.setStatus(ForkStatus.FREE);
+        this.props.onUpdateFork(tempFork);
+
+        tempFork = (this.props.forks[(index + 1) % 5]);
+        tempFork.setStatus(ForkStatus.FREE);
+        this.props.onUpdateFork(tempFork);
+
         const philosopher = this.props.philosophers[index];
         philosopher.setStatus(PhilosopherStatus.THINKING);
         this.props.onUpdatePhilosopher(philosopher);
