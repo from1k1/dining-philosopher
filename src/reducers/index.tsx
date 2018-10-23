@@ -34,14 +34,16 @@ export const rootReducer =  combineReducers<ITableState, ITableAction>({
         console.log(state);
         switch (action.type) {
             case 'ADD_PHILOSOPHER':
-                return state.push(action.payload);
-            case 'UPDATE_PHILOSOPHER':
-                return [
-                    state.map((el, index) =>
-                        el.index === action.payload.index ?
-                        action.payload :
-                        el)
-                ];
+                return {
+                    ...state,
+                    ...action.payload
+                };
+            case 'UPDATE_PHILOSOPHER':{
+                state[action.payload.index] = action.payload;
+                return {
+                    ...state
+                }
+            }
             default:
                 return state;
         }

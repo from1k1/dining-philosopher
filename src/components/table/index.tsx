@@ -50,14 +50,14 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
         const philosopher = this.props.philosophers[index];
         philosopher.setStatus(PhilosopherStatus.EATING);
         this.props.onUpdatePhilosopher(philosopher);
-        await this.sleep(20000);
+        await this.sleep(2000);
         await this.think(index);
     }
     public async think(index: number) {
         const philosopher = this.props.philosophers[index];
         philosopher.setStatus(PhilosopherStatus.THINKING);
         this.props.onUpdatePhilosopher(philosopher);
-        await this.sleep(20000);
+        await this.sleep(2000);
         await this.eat(index);
     }
     public async loop() {
