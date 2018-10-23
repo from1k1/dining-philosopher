@@ -4,21 +4,16 @@ import * as actions from '../../actions';
 import { AsyncStatus, IAsync } from '../../helpers';
 import { Fork, ForkStatus, IFork, IPhilosopher, Philosopher, PhilosopherStatus } from '../../models';
 import './index.css';
-/*interface IAsyncHocProps<T> {
-    Success: IAsyncSuccess<T>,
-    Error: IAsyncError,
-    Loading: IAsyncLoading,
-}*/
 export interface IState {
     forks: Fork[];
     philosophers: Philosopher[];
     status: AsyncStatus;
+    isWorking: boolean;
 }
 export interface IProps<F extends IFork,
     P extends IPhilosopher,
     I extends IAsync<any>> {
     forks: F[];
-    suka:string;
     philosophers: P[];
     onAddFork?: any;
     onAddPhilosopher?: any;
@@ -40,69 +35,54 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
         this.props.onAddPhilosopher(tmpPhilosopher);
         this.state = {
             forks: this.props.forks,
+            isWorking: false,
             philosophers: this.props.philosophers,
             status: AsyncStatus.LOADING
+
         };
         this.onClickTest = this.onClickTest.bind(this);
     }
-
-    public onClickTest() {
-        // actions.addFork(new Fork(5, ForkStatus.FREE));
-        // console.log(this.props);
-        this.props.onAddFork(new Fork(5, ForkStatus.FREE));
+    public sleep(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
-
-    public updateStore = async (fetchFunction: any) => {
-        try {
-            this.successUpdateStore(await fetchFunction());
-        } catch (e) {
-            this.errorUpdateStore();
-            console.log(e);
+    public eat(index: number) {
+        this.props.philosophers[index].setStatus(PhilosopherStatus.EATING);
+        this.props.onUpdatePhilosopher(this.props.philosophers[index]);
+    }
+    public async loop() {
+        while (true) {
+            await this.sleep(500);
+            console.log("step");
+            if (!this.state.isWorking){
+                break;
+            }
         }
     }
-    public loadingUpdateStore = () => {
-        this.setState({ status: AsyncStatus.LOADING });
-    }
-
-    public successUpdateStore = (items: IPhilosopher[] | IFork[]) => {
-        this.setState({ status: AsyncStatus.SUCCESS });
-    }
-
-    public errorUpdateStore = () => {
-        this.setState({ status: AsyncStatus.ERROR });
+    public onClickTest() {
+        this.setState({
+            isWorking: !this.state.isWorking
+        });
+        this.loop();
     }
     public render() {
-        // const { philosophers, forks } = this.props;
         console.log('State:');
-        console.log(this.props.philosophers);
-        // switch (this.state.status) {
-        //     case AsyncStatus.LOADING: {
-        //         console.log("Loading");
-        //         break;
-        //     };
-        //     case AsyncStatus.SUCCESS: {
-        //         console.log(this.props, this.state);
-        //         break;
-        //     };
-        //     default: {
-        //         console.log("Error");
-        //         break;
-        //     }
-        // }
+        console.log(this.state);
+        const philo = Object.keys(this.props.philosophers).map((k) => this.props.philosophers[k]);
+        const forks = Object.keys(this.props.forks).map((k) => this.props.forks[k]);
         return (
             <>
-                <p onClick={this.onClickTest}>AddFork</p>
+                <p onClick={this.onClickTest}>Start</p>
                 <div className="table">
-                    {(this.props.philosophers.length === 5) ?
-                        this.props.philosophers.map((el, index) =>
+                    {(philo.length === 5) ?
+                        philo.map((el, index) =>
                             <div key={index} className={"philosopher p" +
                                 (index + 1) +
                                 (el.getStatus() === PhilosopherStatus.EATING ?
                                     " eating" : " thinking")} />
                         ) : <>YOU SUCK BITCH!</>}
 
-                    {(this.props.forks.length === 5) ?
-                        this.props.forks.map((el, index) =>
+                    {(forks.length === 5) ?
+                        forks.map((el, index) =>
                             <div key={index} className={"fork f" +
                                 (index + 1) +
                                 (
@@ -122,8 +102,6 @@ function mapStateToProps(store: any) {
         philosophers: store.philosophers || []
     }
 }
-
-// TODO : разобраться с тем как работает mapDispatchToProps
 
 export default connect(mapStateToProps, dispatch => ({
     onAddFork(fork: IFork) {
