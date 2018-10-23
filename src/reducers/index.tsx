@@ -20,11 +20,12 @@ export const rootReducer =  combineReducers<ITableState, ITableAction>({
                     ...state,
                     ...action.payload
                 };
-            case 'UPDATE_FORK':
+            case 'UPDATE_FORK': {
+                state[action.payload.index] = action.payload;
                 return {
-                    ...state,
-                    ...action.payload
+                    ...state
                 };
+            }
             default:
                 return state;
         }

@@ -46,27 +46,31 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     public async eat(index: number) {
-        while ((this.props.forks[index % 5].status !== ForkStatus.FREE)
-            && (this.props.forks[(index + 1) % 5].status !== ForkStatus.FREE)) {
-                console.log(this.props.forks[index % 5].status,this.props.forks[(index+1) % 5].status)
+        if ((this.props.forks[index % 5].status === ForkStatus.FREE)
+            && (this.props.forks[(index + 1) % 5].status === ForkStatus.FREE)) {
+
+            console.log('Eating started...');
+
+            let tempFork = (this.props.forks[index % 5]);
+            tempFork.setStatus(ForkStatus.IN_USE);
+            this.props.onUpdateFork(tempFork);
+
+            tempFork = (this.props.forks[(index + 1) % 5]);
+            tempFork.setStatus(ForkStatus.IN_USE);
+            this.props.onUpdateFork(tempFork);
+
+            const philosopher = this.props.philosophers[index];
+            philosopher.setStatus(PhilosopherStatus.EATING);
+            this.props.onUpdatePhilosopher(philosopher);
+            await this.sleep(2000);
+            await this.think(index);
+        } else {
+            console.log('Can no eat...');
         }
-
-        let tempFork = (this.props.forks[index % 5]);
-        tempFork.setStatus(ForkStatus.IN_USE);
-        this.props.onUpdateFork(tempFork);
-
-        tempFork = (this.props.forks[(index + 1) % 5]);
-        tempFork.setStatus(ForkStatus.IN_USE);
-        this.props.onUpdateFork(tempFork);
-
-        const philosopher = this.props.philosophers[index];
-        philosopher.setStatus(PhilosopherStatus.EATING);
-        this.props.onUpdatePhilosopher(philosopher);
-        await this.sleep(2000);
-        await this.think(index);
     }
     public async think(index: number) {
 
+        console.log('Eating finished...');
         let tempFork = (this.props.forks[index % 5]);
         tempFork.setStatus(ForkStatus.FREE);
         this.props.onUpdateFork(tempFork);
@@ -93,10 +97,10 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
         this.loop();
     }
     public render() {
-        console.log('RENDER');
+        // console.log('RENDER');
         const philo = Object.keys(this.props.philosophers).map((k) => this.props.philosophers[k]);
         const forks = Object.keys(this.props.forks).map((k) => this.props.forks[k]);
-        console.log(philo);
+        // console.log(philo);
 
         return (
             <>
