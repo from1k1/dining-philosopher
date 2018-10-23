@@ -4,6 +4,7 @@ import * as actions from '../../actions';
 import { AsyncStatus, IAsync } from '../../helpers';
 import { Fork, ForkStatus, IFork, IPhilosopher, Philosopher, PhilosopherStatus } from '../../models';
 import './index.css';
+
 export interface IState {
     forks: Fork[];
     philosophers: Philosopher[];
@@ -29,7 +30,7 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
             new Fork(index + 1, ForkStatus.FREE)
         );
         const tmpPhilosopher: Philosopher[] = Array(5).fill(0).map((el, index) =>
-            new Philosopher("P " + index + 1, PhilosopherStatus.THINKING)
+            new Philosopher("P " + (index + 1), PhilosopherStatus.THINKING, index)
         );
         this.props.onAddFork(tmpFork);
         this.props.onAddPhilosopher(tmpPhilosopher);
@@ -45,17 +46,23 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
     public sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    public eat(index: number) {
-        this.props.philosophers[index].setStatus(PhilosopherStatus.EATING);
-        this.props.onUpdatePhilosopher(this.props.philosophers[index]);
+    public async eat(index: number) {
+        const philosopher = this.props.philosophers[index];
+        philosopher.setStatus(PhilosopherStatus.EATING);
+        this.props.onUpdatePhilosopher(philosopher);
+        await this.sleep(20000);
+        await this.think(index);
+    }
+    public async think(index: number) {
+        const philosopher = this.props.philosophers[index];
+        philosopher.setStatus(PhilosopherStatus.THINKING);
+        this.props.onUpdatePhilosopher(philosopher);
+        await this.sleep(20000);
+        await this.eat(index);
     }
     public async loop() {
-        while (true) {
-            await this.sleep(500);
-            console.log("step");
-            if (!this.state.isWorking){
-                break;
-            }
+        for (let index = 0; index < 5; index++) {
+            this.eat(index);
         }
     }
     public onClickTest() {
@@ -65,10 +72,11 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
         this.loop();
     }
     public render() {
-        console.log('State:');
-        console.log(this.state);
+        console.log('RENDER');
         const philo = Object.keys(this.props.philosophers).map((k) => this.props.philosophers[k]);
         const forks = Object.keys(this.props.forks).map((k) => this.props.forks[k]);
+        console.log(philo);
+
         return (
             <>
                 <p onClick={this.onClickTest}>Start</p>
@@ -79,7 +87,7 @@ class Table<F extends Fork, P extends Philosopher, I extends IAsync<any>> extend
                                 (index + 1) +
                                 (el.getStatus() === PhilosopherStatus.EATING ?
                                     " eating" : " thinking")} />
-                        ) : <>YOU SUCK BITCH!</>}
+                        ) : <>PHILOSOPHER SUCK BITCH!</>}
 
                     {(forks.length === 5) ?
                         forks.map((el, index) =>

@@ -6,7 +6,8 @@ export enum PhilosopherStatus {
 }
 export interface IPhilosopher {
     name: string,
-    status: PhilosopherStatus
+    status: PhilosopherStatus,
+    index: number
 }
 export enum ForkStatus {
     FREE, IN_USE

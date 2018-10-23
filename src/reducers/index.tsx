@@ -14,8 +14,6 @@ export interface ITableAction {
 
 export const rootReducer =  combineReducers<ITableState, ITableAction>({    
     forks: (state = [], action) => {
-        console.log("In reducer forks ");
-        console.log(action.payload);
         switch (action.type) {
             case 'ADD_FORK':
                 return {
@@ -32,13 +30,18 @@ export const rootReducer =  combineReducers<ITableState, ITableAction>({
         }
     },
     philosophers: (state = [], action) => {
-        console.log("In reducer ");
+        console.log('REDUCER PHILOSOPHERS');
         console.log(state);
         switch (action.type) {
             case 'ADD_PHILOSOPHER':
-                return {...state, ...action.payload};
+                return state.push(action.payload);
             case 'UPDATE_PHILOSOPHER':
-                return {...state, ...action.payload};
+                return [
+                    state.map((el, index) =>
+                        el.index === action.payload.index ?
+                        action.payload :
+                        el)
+                ];
             default:
                 return state;
         }

@@ -1,5 +1,5 @@
 import { action } from 'typesafe-actions';
-import { IFork, IPhilosopher, PhilosopherStatus } from '../models';
+import { IFork, IPhilosopher } from '../models';
 
 export enum actionType {
     ADD = 'ADD',
